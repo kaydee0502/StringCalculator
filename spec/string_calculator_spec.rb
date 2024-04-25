@@ -11,7 +11,7 @@ RSpec.describe StringCalculator do
 
   RSpec::Matchers.define :raise_invalid_input do |expected|
     match do |string|
-      expect { StringCalculator.new(string) }.to raise_exception
+      expect { StringCalculator.new(string) }.to raise_exception(RuntimeError, expected)
     end
   end
 
@@ -53,7 +53,7 @@ RSpec.describe StringCalculator do
     end
 
     it "raise Invalid input if \"0\n\" is passed" do
-      expect("0\n").to raise_invalid_input
+      expect("0\n").to raise_invalid_input("Invalid input")
     end
 
     it "returns 100 if \"20\n20,20\n40\" is passed" do
@@ -75,7 +75,17 @@ RSpec.describe StringCalculator do
     end
 
     it "raise Invalid input if a number is passed as delimiter is passed" do
-      expect("//4\n545").to raise_invalid_input
+      expect("//4\n545").to raise_invalid_input("Integers cannot be used as delimiter")
+    end
+  end
+
+  describe "#add with negetive numbers" do
+    it "raise exception if \"//|\n1|1\n1|-1|0|1\" is passed" do
+      expect("//|\n1|1\n1|-1|0|1").to raise_invalid_input("Negetive numbers not allowed: -1")
+    end
+
+    it "raise exception if if \"-10,-25,48\" is passed" do
+      expect("-10,-25,48").to raise_invalid_input("Negetive numbers not allowed: -10,-25")
     end
   end
 end

@@ -3,8 +3,9 @@ class StringCalculator
     @input = input
     @default_delimiter = ','
 
-    check_for_invalid_input
     apply_custom_delimiter if @input.start_with? '//'
+    @negetive_numbers ||= check_for_negetive_numbers
+    check_for_invalid_input
     replace_newline
   end
 
@@ -22,6 +23,14 @@ class StringCalculator
 
   def check_for_invalid_input
     raise "Invalid input" if @input.end_with? "\n"
+
+    raise "Negetive numbers not allowed: #{@negetive_numbers.join(",")}" if @negetive_numbers.length > 0
+  end
+
+  def check_for_negetive_numbers
+    @input.split(@default_delimiter).select do |unit|
+      unit.to_i < 0
+    end
   end
 
   def replace_newline

@@ -9,6 +9,12 @@ RSpec.describe StringCalculator do
     end
   end
 
+  RSpec::Matchers.define :raise_invalid_input do |expected|
+    match do |string|
+      expect { StringCalculator.new(string) }.to raise_exception
+    end
+  end
+
   describe "#add" do
     it "returns 0 if empty string is passed" do
       expect("").to adds_to(0)
@@ -47,13 +53,29 @@ RSpec.describe StringCalculator do
     end
 
     it "raise Invalid input if \"0\n\" is passed" do
-      expect {
-         StringCalculator.new("0\n")
-        }.to raise_exception(RuntimeError, 'Invalid input')
+      expect("0\n").to raise_invalid_input
     end
 
     it "returns 100 if \"20\n20,20\n40\" is passed" do
       expect("20\n20,20\n40").to adds_to(100)
+    end
+  end
+
+  describe "#add with different delimiter" do
+    it "returns 5 if \"//|\n1|1\n1|1|0|1\" is passed" do
+      expect("//|\n1|1\n1|1|0|1").to adds_to(5)
+    end
+
+    it "returns 18 if \"///\n4/5/6/3\" is passed" do
+      expect("///\n4/5/6/3").to adds_to(18)
+    end
+
+    it "returns 69 if \"//----\n30----30----3----6\" is passed" do
+      expect("//----\n30----30----3----6").to adds_to(69)
+    end
+
+    it "raise Invalid input if a number is passed as delimiter is passed" do
+      expect("//4\n545").to raise_invalid_input
     end
   end
 end

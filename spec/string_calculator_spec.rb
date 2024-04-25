@@ -3,11 +3,9 @@
 require_relative '../string_calculator'
 
 RSpec.describe StringCalculator do
-  let(:calc) { StringCalculator.new }
-
   RSpec::Matchers.define :adds_to do |expected|
     match do |string|
-      calc.add(string) == expected
+      StringCalculator.new(string).add == expected
     end
   end
 
@@ -36,6 +34,26 @@ RSpec.describe StringCalculator do
 
     it "returns 5 if \"1,1,0,1,1,0,1\" is passed" do
       expect("1,1,0,1,1,0,1").to adds_to(5)
+    end
+  end
+
+  describe "#add with given new lines" do
+    it "returns 5 if \"1,1\n1,1,0,1\" is passed" do
+      expect("1,1\n1,1,0,1").to adds_to(5)
+    end
+
+    it "returns 0 if \"0\n0\" is passed" do
+      expect("0\n0").to adds_to(0)
+    end
+
+    it "raise Invalid input if \"0\n\" is passed" do
+      expect {
+         StringCalculator.new("0\n")
+        }.to raise_exception(RuntimeError, 'Invalid input')
+    end
+
+    it "returns 100 if \"20\n20,20\n40\" is passed" do
+      expect("20\n20,20\n40").to adds_to(100)
     end
   end
 end

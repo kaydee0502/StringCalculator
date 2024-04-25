@@ -20,8 +20,22 @@ RSpec.describe StringCalculator do
       expect("1").to adds_to(1)
     end
 
-    it "returns 6 if \"1,5\" string is passed" do
+    it "returns 6 if \"1,5\" is passed" do
       expect("1,5").to adds_to(6)
+    end
+  end
+
+  describe "#add multiple numbers" do
+    it "returns 12 if \"1,5,6\" is passed" do
+      expect("1,5,6").to adds_to(12)
+    end
+
+    it "returns 83 if \"10,25,48\" is passed" do
+      expect("10,25,48").to adds_to(83)
+    end
+
+    it "returns 5 if \"1,1,0,1,1,0,1\" is passed" do
+      expect("1,1,0,1,1,0,1").to adds_to(5)
     end
   end
 end

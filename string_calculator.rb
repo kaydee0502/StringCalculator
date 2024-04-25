@@ -1,12 +1,33 @@
+require_relative 'validators'
+
 class StringCalculator
+  include Validators
+
   def initialize(input)
     @input = input
     @default_delimiter = ','
+    @errors = false
 
     apply_custom_delimiter if @input.start_with? '//'
-    @negetive_numbers ||= check_for_negetive_numbers
-    check_for_invalid_input
+
+    @valid_input = false
+    validate_input
     replace_newline
+  end
+
+  def add
+    raise 'Validations falied' unless  @valid_input
+
+    @input.split(@default_delimiter).map do |unit|
+      unit.to_i
+    end.sum
+  end
+
+  private
+
+  def validate_input
+    check_for_validations(@input, @default_delimiter)
+    @valid_input = true
   end
 
   def apply_custom_delimiter
@@ -21,25 +42,7 @@ class StringCalculator
     !!Integer(input) rescue false
   end
 
-  def check_for_invalid_input
-    raise "Invalid input" if @input.end_with? "\n"
-
-    raise "Negetive numbers not allowed: #{@negetive_numbers.join(",")}" if @negetive_numbers.length > 0
-  end
-
-  def check_for_negetive_numbers
-    @input.split(@default_delimiter).select do |unit|
-      unit.to_i < 0
-    end
-  end
-
   def replace_newline
     @input = @input.gsub("\n", @default_delimiter)
-  end
-
-  def add
-    @input.split(@default_delimiter).map do |unit|
-      unit.to_i
-    end.sum
   end
 end

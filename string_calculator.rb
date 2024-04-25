@@ -1,4 +1,4 @@
-require_relative 'validators'
+require_relative 'libs/validators'
 
 class StringCalculator
   include Validators
@@ -6,12 +6,13 @@ class StringCalculator
   def initialize(input)
     @input = input
     @default_delimiter = ','
-    @errors = false
 
     apply_custom_delimiter if @input.start_with? '//'
 
     @valid_input = false
     validate_input
+
+    # treats new lines as delimiter as well
     replace_newline
   end
 
@@ -32,7 +33,9 @@ class StringCalculator
 
   def apply_custom_delimiter
     # Split input from first new line and exclude starting //
-    delimiter = @input.split("\n", 2)[0][2..-1]
+    input_split = @input.split("\n", 2)
+    delimiter = input_split[0][2..-1]
+    @input = input_split[1]
     raise "Integers cannot be used as delimiter" if valid_integer?(delimiter)
 
     @default_delimiter = delimiter

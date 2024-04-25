@@ -1,4 +1,4 @@
-# File: calculator_spec.rb
+# File: string_calculator_spec.rb
 
 require_relative '../string_calculator'
 
